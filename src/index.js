@@ -527,18 +527,18 @@ export default {
       return handleReset(request, env);
     }
     
-    // NEW: Second pool (0-4)
-    if (url.pathname === "/api/distribute2") {
-      return handleDistribute2(request, env);
-    }
-    if (url.pathname === "/api/number2") {
-      return handleDistribute2(request, env);
-    }
-    if (url.pathname === "/api/current2") {
-      return handleCurrent2(request, env);
-    }
-    if (url.pathname === "/api/reset2") {
-      return handleReset2(request, env);
+    // NEW: Second pool (0-4) - Temporarily disabled until DO2 migration complete
+    if (url.pathname === "/api/distribute2" || 
+        url.pathname === "/api/number2" || 
+        url.pathname === "/api/current2" || 
+        url.pathname === "/api/reset2") {
+      return new Response(
+        JSON.stringify({ 
+          error: "Service temporarily unavailable", 
+          message: "Pool 2 (distribute2) is being configured. Please use /api/distribute for now." 
+        }),
+        { status: 503, headers: { "Content-Type": "application/json; charset=utf-8" } }
+      );
     }
     
     // 404
@@ -547,8 +547,7 @@ export default {
         error: "Not found",
         available_paths: [
           "/", "/health",
-          "/api/distribute", "/api/number", "/api/current", "/api/reset",
-          "/api/distribute2", "/api/number2", "/api/current2", "/api/reset2"
+          "/api/distribute", "/api/number", "/api/current", "/api/reset"
         ]
       }),
       { status: 404, headers: { "Content-Type": "application/json; charset=utf-8" } }
