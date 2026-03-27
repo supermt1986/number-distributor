@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Wrangler state and secrets
+.wrangler/
+.dev.vars
+.env
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo

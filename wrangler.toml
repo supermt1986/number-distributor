@@ -1,0 +1,28 @@
+name = "number-distributor"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Workers Routes
+routes = [
+  { pattern = "number-distributor.wangjunli1983.workers.dev/*", zone_name = "wangjunli1983.workers.dev" }
+]
+
+# Durable Objects Bindings
+[durable_objects]
+bindings = [
+  { name = "NUMBER_DISTRIBUTOR", class_name = "NumberDistributor" },
+  { name = "NUMBER_DISTRIBUTOR2", class_name = "NumberDistributor2" }
+]
+
+# Durable Object Migrations
+[[migrations]]
+tag = "v1"
+new_classes = ["NumberDistributor"]
+
+[[migrations]]
+tag = "v2"
+new_classes = ["NumberDistributor2"]
+
+# Environment Variables (API Token stored securely)
+[vars]
+NODE_ENV = "production"
