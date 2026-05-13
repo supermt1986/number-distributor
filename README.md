@@ -4,8 +4,9 @@ A distributed number allocation service using Cloudflare Durable Objects.
 
 ## Features
 
-- **Pool 1 (0-99)**: Original distribution pool with 100 numbers
-- **Pool 2 (0-4)**: New small pool with 5 numbers (newly added)
+- **Dynamic Pool Configuration**: Update number pool ranges without data loss! 🔧
+- **Pool 1 (Primary)**: Configurable range, default 0-99 (100 numbers)
+- **Pool 2 (Secondary)**: Configurable range, default 90-99 (10 numbers)
 
 ## API Endpoints
 
@@ -16,7 +17,7 @@ A distributed number allocation service using Cloudflare Durable Objects.
 | GET | `/` | Service info | ❌ No |
 | GET | `/health` | Health check | ❌ No |
 
-### Pool 1 (0-99)
+### Pool 1 (Primary - Default 0-99)
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
@@ -88,6 +89,45 @@ Response:
 }
 ```
 
+### Configure Pool Range 🔧 NEW!
+**Query Current Configuration:**
+```bash
+curl https://number-distributor.wangjunli1983.workers.dev/api/pool-config?pool=primary
+```
+
+Response:
+```json
+{
+  "config": {
+    "min": 0,
+    "max": 99
+  },
+  "pool": "primary"
+}
+```
+
+**Update Pool Range:**
+```bash
+curl -X POST https://number-distributor.wangjunli1983.workers.dev/api/configure-pool \
+  -H "X-API-Token: YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"pool": "primary", "min": 0, "max": 99}'
+```
+
+Response:
+```json
+{
+  "success": true,
+  "pool": "primary",
+  "previous_range": "0-89",
+  "new_range": "0-99",
+  "current_value": 70,
+  "timestamp": "2026-05-13T01:23:19.304Z"
+}
+```
+
+⚠️ **Safety**: Cannot shrink range if current value exceeds new max!
+
 ### Reset Counter (Auth Required)
 ```bash
 curl -X POST https://number-distributor.wangjunli1983.workers.dev/api/reset \
@@ -137,6 +177,14 @@ curl http://localhost:8787/api/current
 - **Language**: JavaScript/TypeScript compatible
 
 ## Changelog
+
+### v3.0 (2026-05-13) - Dynamic Pool Configuration 🎉
+- ✅ Added dynamic pool configuration API (`/api/configure-pool`, `/api/pool-config`)
+- ✅ Pools now support customizable min/max ranges
+- ✅ Safe updates: Current counter values are preserved during configuration changes
+- ✅ Safety validation: Rejects range changes that would invalidate existing values
+- ✅ All endpoints now return dynamic `range` and `total_pool` values
+- ✅ Backward compatible: Existing code continues to work without changes
 
 ### v2.0 (2026-03-27)
 - ✅ Added second distribution pool (0-4)

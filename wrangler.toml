@@ -7,13 +7,14 @@ workers_dev = true
 # Durable Objects Bindings
 [durable_objects]
 bindings = [
-  { name = "NUMBER_DISTRIBUTOR", class_name = "NumberDistributor" }
+  { name = "NUMBER_DISTRIBUTOR", class_name = "NumberDistributor" },
+  { name = "NUMBER_DISTRIBUTOR2", class_name = "NumberDistributor2" }
 ]
 
 # Durable Object Migrations (Using SQLite classes for free plan)
 [[migrations]]
-tag = "v1"
-new_sqlite_classes = ["NumberDistributor"]
+tag = "v2"
+new_sqlite_classes = ["NumberDistributor2"]
 
 [vars]
 NODE_ENV = "production"
